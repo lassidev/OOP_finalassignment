@@ -16,7 +16,7 @@ public class BarGraph extends JPanel {
 
     public ArrayList<Bar> bars = new ArrayList<Bar>();
 
-    public BarGraph() {
+    public BarGraph() { //constructor
         setBorder( new EmptyBorder(10, 10, 10, 10) );
         setLayout( new BorderLayout() );
 
@@ -37,12 +37,12 @@ public class BarGraph extends JPanel {
         add(labelPanel, BorderLayout.PAGE_END);
     }
 
-    public void addHistogramColumn(String label, double value, Color color) {
+    public void addBarGraphColumn(String label, double value, Color color) { //Create new Bar object
         Bar bar = new Bar(label, value, color);
         bars.add( bar );
     }
 
-    public void layoutHistogram() {
+    public void layoutBarGraph() { //Adding bars to JPanel
         barPanel.removeAll();
         labelPanel.removeAll();
 
@@ -125,7 +125,7 @@ public class BarGraph extends JPanel {
         }
     }
 
-    public void createAndShowGraph(Database database) {
+    public void createAndShowGraph(Database database) { //build bargraph from database of expenses
         BarGraph panel = new BarGraph();
         for (Expense e : database.db) {
             boolean existingCategory = false;
@@ -142,10 +142,10 @@ public class BarGraph extends JPanel {
                 }
             }
             if(!existingCategory) {
-                panel.addHistogramColumn(e.getCategory(), e.getPrice(), randomColor);
+                panel.addBarGraphColumn(e.getCategory(), e.getPrice(), randomColor);
             }
         }
-        panel.layoutHistogram();
+        panel.layoutBarGraph();
 
         JFrame frame = new JFrame("Bar graph summary");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
