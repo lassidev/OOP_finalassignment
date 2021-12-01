@@ -34,8 +34,6 @@ public class Database {
     public void readExpensesFromCSV(String fileName) {
         db.clear(); //Empty database list
         Path pathToFile = Paths.get(fileName);
-        // create an instance of BufferedReader
-        // using try with resource, Java 7 feature to close resources
         try (BufferedReader br = Files.newBufferedReader(pathToFile,
                 StandardCharsets.US_ASCII)) {
 
@@ -45,15 +43,8 @@ public class Database {
 
             // loop until all lines are read
             while (line != null) {
-
-                // use string.split to load a string array with the values from
-                // each line of
-                // the file, using a comma as the delimiter
                 String[] attributes = line.split(",");
-
                 addExpense(attributes);
-
-
                 // read next line before looping
                 // if end of file reached, line would be null
                 line = br.readLine();
@@ -62,25 +53,25 @@ public class Database {
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
-
     }
 
-    public static boolean exportToCSV(JTable tableToExport, String pathToExportTo) {
+    public boolean exportToCSV(JTable tableToExport, String pathToExportTo) {
 
     try {
 
         TableModel model = tableToExport.getModel();
         FileWriter csv = new FileWriter(new File(pathToExportTo));
 
+        //write columns
         for (int i = 0; i < model.getColumnCount(); i++) {
             csv.write(model.getColumnName(i));
             if (i != model.getColumnCount() - 1) { //only write comma if not last column
                 csv.write(",");
             }
         }
-
         csv.write("\n");
 
+        //write rows
         for (int i = 0; i < model.getRowCount(); i++) {
             for (int j = 0; j < model.getColumnCount(); j++) {
                 csv.write(model.getValueAt(i, j).toString());
@@ -97,13 +88,6 @@ public class Database {
         e.printStackTrace();
     }
     return false;
-    }
-
-
-
-    public String dumpDatabase() {
-        //System.out.println(db);
-        return db.toString();
     }
 
     public static void main(String[] args) {

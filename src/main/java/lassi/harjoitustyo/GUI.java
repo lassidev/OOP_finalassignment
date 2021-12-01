@@ -7,10 +7,13 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JFileChooser;
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
-public class GUI extends Database
+public class GUI
 {
      private static JFrame frame; 
      private static JTable table;
@@ -52,7 +55,7 @@ public class GUI extends Database
             {
                 public void actionPerformed(ActionEvent e) {
                     String filePath = fileChooser();
-                    exportToCSV(table, filePath);
+                    database.exportToCSV(table, filePath);
                 }
             }
         );
@@ -205,9 +208,14 @@ public class GUI extends Database
                 }
 
                 public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                    category.removeAllItems();
+                    category.removeAllItems(); //prevent duplicate adding
+                    ArrayList<String> categories = new ArrayList<String>();
+                    //boolean contains;
                     for (int i = 0; i < tableModel.getRowCount(); i++) {
-                        category.addItem(table.getValueAt(i,1).toString());
+                        if (!categories.stream().anyMatch(table.getValueAt(i,1).toString()::equals)) {
+                            category.addItem(table.getValueAt(i,1).toString());
+                            categories.add(table.getValueAt(i,1).toString());
+                        }
                     }
                 }
             }

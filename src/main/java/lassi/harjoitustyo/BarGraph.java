@@ -7,7 +7,7 @@ import javax.swing.border.*;
 import java.util.Random;
 
 public class BarGraph extends JPanel {
-    private int histogramHeight = 300;
+    private int barGraphHeight = 300;
     private int barWidth = 40;
     private int barGap = 15;
 
@@ -57,7 +57,7 @@ public class BarGraph extends JPanel {
             label.setHorizontalAlignment(JLabel.CENTER);
             label.setVerticalTextPosition(JLabel.TOP);
             label.setVerticalAlignment(JLabel.BOTTOM);
-            int barHeight = ((int)bar.getValue() * histogramHeight) / maxValue;
+            int barHeight = ((int)bar.getValue() * barGraphHeight) / maxValue;
             Icon icon = new ColorIcon(bar.getColor(), barWidth, barHeight);
             label.setIcon( icon );
             barPanel.add( label );
