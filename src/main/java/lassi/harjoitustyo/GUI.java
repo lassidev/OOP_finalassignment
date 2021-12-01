@@ -7,8 +7,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JFileChooser;
 import java.io.File;
 import java.net.URI;
-import java.net.URL;
-
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
@@ -39,8 +37,7 @@ public class GUI extends Database
         JMenu fileMenu = new JMenu("File");
         JMenuItem openFile = new JMenuItem("Open file");
         openFile.addActionListener(
-            new ActionListener()
-            {
+            new ActionListener() {
                 public void actionPerformed(ActionEvent e)
                 {
                     String filePath = fileChooser();
@@ -53,8 +50,7 @@ public class GUI extends Database
         saveFile.addActionListener(
             new ActionListener()
             {
-                public void actionPerformed(ActionEvent e)
-                {
+                public void actionPerformed(ActionEvent e) {
                     String filePath = fileChooser();
                     exportToCSV(table, filePath);
                 }
@@ -69,10 +65,8 @@ public class GUI extends Database
         JMenu editMenu = new JMenu("Edit");
         JMenuItem filterExpensesByDate = new JMenuItem("Filter expenses by date");
         filterExpensesByDate.addActionListener(
-            new ActionListener()
-            {
-                public void actionPerformed(ActionEvent e)
-                {
+            new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
                     tableToDatabase();
                     String date = JOptionPane.showInputDialog(frame,"Enter date");
                     if (date != null) {
@@ -89,8 +83,7 @@ public class GUI extends Database
         JMenu viewMenu = new JMenu("View");
         JMenuItem exportGraph = new JMenuItem("Bar graph summary");
         exportGraph.addActionListener(
-            new ActionListener()
-            {
+            new ActionListener() {
                     public void actionPerformed(ActionEvent ae) {
                         try {
                             tableToDatabase();
@@ -109,8 +102,7 @@ public class GUI extends Database
         JMenu helpMenu = new JMenu("Help");
         JMenuItem getHelp = new JMenuItem("Get help");
         getHelp.addActionListener(
-            new ActionListener()
-            {
+            new ActionListener() {
                     public void actionPerformed(ActionEvent ae) {
                         try {
                             String url = "https://betterprogramming.pub/we-need-to-talk-about-mental-health-for-software-developers-65bfa00e2356"; // capture the URL when the user presses the button.
@@ -124,8 +116,7 @@ public class GUI extends Database
             });
         JMenuItem debug = new JMenuItem("Debug");
         debug.addActionListener(
-            new ActionListener()
-            {
+            new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         tableToDatabase();
                     }
@@ -160,26 +151,20 @@ public class GUI extends Database
         double tempPrice = 0;
         String tempComment = "";
 
-        //System.out.println(tableModel.getValueAt(3, 2));
         database.db.clear(); //clear database to prevent duplicate adding
-        for (int i = 0; i < tableModel.getRowCount(); i++) {
-            for (int j = 0; j < tableModel.getColumnCount(); j++) {
-                //System.out.println( tableModel.getValueAt(i, j).toString());
-                if (j==0) {
-                    //System.out.println("Date: " + tableModel.getValueAt(i, j).toString());
+        for (int i = 0; i < tableModel.getRowCount(); i++) { //For all rows in table
+            for (int j = 0; j < tableModel.getColumnCount(); j++) { //Iterate through all columns
+                if (j==0) { //Date
                     tempDate = tableModel.getValueAt(i, j).toString();
-                } if (j==1) {
-                    //System.out.println("Category: " + tableModel.getValueAt(i, j).toString());
+                } if (j==1) { //Category
                     tempCategory = tableModel.getValueAt(i, j).toString();
-                } if (j==2) {
-                    //System.out.println("Price: " + tableModel.getValueAt(i, j).toString());
+                } if (j==2) { //Price
                     tempPrice = Double.parseDouble(tableModel.getValueAt(i, j).toString());
-                } if (j==3) {
-                    //System.out.println("Comment: " + tableModel.getValueAt(i, j).toString());
+                } if (j==3) { //Comment
                     tempComment = tableModel.getValueAt(i, j).toString();
                 }
                 }
-            database.addExpense(tempDate, tempCategory, tempPrice, tempComment);
+            database.addExpense(tempDate, tempCategory, tempPrice, tempComment); //add row to database
             }
         }
     
@@ -188,7 +173,6 @@ public class GUI extends Database
         for (Expense e : database.db) {
             if (date.equals(e.getDateString())) {
                 tableModel.addRow(new Object[]{e.getDate(), e.getCategory(), e.getPrice(), e.getComment()});
-                //System.out.println(e.getDateString());
             }
 		}
     }
@@ -198,15 +182,10 @@ public class GUI extends Database
         myPanel = new JPanel();
          //Save expense button
          saveButton = new JButton("Save expense");
-         //Each event source needs a listener
          saveButton.addActionListener(
-             new ActionListener()
-             {
-                 public void actionPerformed(ActionEvent e)
-                 {
-                     //JOptionPane.showMessageDialog(frame,category.getText());
+             new ActionListener() {
+                 public void actionPerformed(ActionEvent e) {
                      database.addExpense(date.getText(), (String)category.getSelectedItem(), Double.parseDouble(price.getText()), comment.getText());
-                    //output.setText(db.dumpDatabase());
                     populateTable();
                  }
              }
@@ -225,10 +204,8 @@ public class GUI extends Database
                 public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
                 }
 
-                public void popupMenuWillBecomeVisible(PopupMenuEvent e)
-                {
+                public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
                     category.removeAllItems();
-                    //tableModel 
                     for (int i = 0; i < tableModel.getRowCount(); i++) {
                         category.addItem(table.getValueAt(i,1).toString());
                     }
@@ -267,9 +244,6 @@ public class GUI extends Database
 
      public GUI() { //Constructor, graphical interface
 
-         //New panel
-         
-
          // building the GUI
          frame = new JFrame("Expense Manager"); //New JFrame
          //Common methods for handling closure events
@@ -278,19 +252,15 @@ public class GUI extends Database
          {System.exit(0);} });
          frame.getContentPane().add(BorderLayout.NORTH, menuBar());
          frame.getContentPane().add(table());
-         //frame.getContentPane().add(output);
          frame.getContentPane().add(BorderLayout.SOUTH, panel());
          frame.pack(); 
-         //frame.setSize(600, 400);
          frame.setVisible(true);
 
         }
         
         public static void main(String s[]) {
      
-            
-            GUI gui = new GUI(); //New Simple2 components
-                             
+            //GUI gui = new GUI();
 
         }
 }

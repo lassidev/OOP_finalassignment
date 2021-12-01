@@ -1,16 +1,12 @@
 package lassi.harjoitustyo;
 
 import java.awt.*;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
-
 import javax.swing.*;
 import javax.swing.border.*;
 import java.util.Random;
 
-public class BarGraph extends JPanel
-{
+public class BarGraph extends JPanel {
     private int histogramHeight = 300;
     private int barWidth = 40;
     private int barGap = 15;
@@ -20,8 +16,7 @@ public class BarGraph extends JPanel
 
     public ArrayList<Bar> bars = new ArrayList<Bar>();
 
-    public BarGraph()
-    {
+    public BarGraph() {
         setBorder( new EmptyBorder(10, 10, 10, 10) );
         setLayout( new BorderLayout() );
 
@@ -34,18 +29,20 @@ public class BarGraph extends JPanel
         labelPanel = new JPanel( new GridLayout(1, 0, barGap, 0) );
         labelPanel.setBorder( new EmptyBorder(5, 10, 0, 10) );
 
+        JLabel summaryLabel = new JLabel("Summary for all expenses, divided by category");
+        summaryLabel.setFont(new Font("Arial", 0, 30));
+
+        add(summaryLabel, BorderLayout.NORTH);
         add(barPanel, BorderLayout.CENTER);
         add(labelPanel, BorderLayout.PAGE_END);
     }
 
-    public void addHistogramColumn(String label, double value, Color color)
-    {
+    public void addHistogramColumn(String label, double value, Color color) {
         Bar bar = new Bar(label, value, color);
         bars.add( bar );
     }
 
-    public void layoutHistogram()
-    {
+    public void layoutHistogram() {
         barPanel.removeAll();
         labelPanel.removeAll();
 
@@ -54,8 +51,7 @@ public class BarGraph extends JPanel
         for (Bar bar: bars)
             maxValue = Math.max(maxValue, (int)bar.getValue());
 
-        for (Bar bar: bars)
-        {
+        for (Bar bar: bars) {
             JLabel label = new JLabel(bar.getValue() + "");
             label.setHorizontalTextPosition(JLabel.CENTER);
             label.setHorizontalAlignment(JLabel.CENTER);
@@ -72,26 +68,22 @@ public class BarGraph extends JPanel
         }
     }
 
-    private class Bar
-    {
+    private class Bar {
         private String label;
         private double value;
         private Color color;
 
-        public Bar(String label, double value, Color color)
-        {
+        public Bar(String label, double value, Color color) {
             this.label = label;
             this.value = value;
             this.color = color;
         }
 
-        public String getLabel()
-        {
+        public String getLabel() {
             return label;
         }
 
-        public double getValue()
-        {
+        public double getValue() {
             return value;
         }
 
@@ -99,39 +91,33 @@ public class BarGraph extends JPanel
             this.value += value;
         }
 
-        public Color getColor()
-        {
+        public Color getColor() {
             return color;
         }
     }
 
-    private class ColorIcon implements Icon
-    {
+    private class ColorIcon implements Icon {
         private int shadow = 3;
 
         private Color color;
         private int width;
         private int height;
 
-        public ColorIcon(Color color, int width, int height)
-        {
+        public ColorIcon(Color color, int width, int height) {
             this.color = color;
             this.width = width;
             this.height = height;
         }
 
-        public int getIconWidth()
-        {
+        public int getIconWidth() {
             return width;
         }
 
-        public int getIconHeight()
-        {
+        public int getIconHeight() {
             return height;
         }
 
-        public void paintIcon(Component c, Graphics g, int x, int y)
-        {
+        public void paintIcon(Component c, Graphics g, int x, int y) {
             g.setColor(color);
             g.fillRect(x, y, width - shadow, height);
             g.setColor(Color.GRAY);
@@ -139,42 +125,29 @@ public class BarGraph extends JPanel
         }
     }
 
-    public void createAndShowGraph(Database database)
-    {
+    public void createAndShowGraph(Database database) {
         BarGraph panel = new BarGraph();
-        //panel.addHistogramColumn("A", 350, Color.RED);
-        //panel.addHistogramColumn("B", 690, Color.YELLOW);
-        //panel.addHistogramColumn("C", 510, Color.BLUE);
-        //String[] colors = {"BLACK", "BLUE", "CYAN", "DARK_GRAY", "GRAY", "GREEN", "LIGHT_GRAY"}
-        //panel.addHistogramColumn("A", 350, Color.RED);
-        System.out.println("Launched graph builder");
         for (Expense e : database.db) {
             boolean existingCategory = false;
-            System.out.println("Now searching database");
             Random rand = new Random();
             float r = rand.nextFloat();
             float g = rand.nextFloat();
             float b = rand.nextFloat();
             Color randomColor = new Color(r, g, b);
-            //panel.addHistogramColumn(e.getCategory(), e.getPrice(), randomColor);
             for (Bar bar : panel.bars) {
                 if (bar.getLabel().equals(e.getCategory())) {
                     bar.addValue(e.getPrice());
-                    System.out.println("Not unique: " + bar.getLabel());
                     existingCategory = true;
                     break;
                 }
             }
             if(!existingCategory) {
                 panel.addHistogramColumn(e.getCategory(), e.getPrice(), randomColor);
-                System.out.println("Unique: " + e.getCategory());
-                System.out.println("How may bars: " + bars.size());
             }
         }
-        System.out.println("How may bars: " + bars.size());
         panel.layoutHistogram();
 
-        JFrame frame = new JFrame("Histogram Panel");
+        JFrame frame = new JFrame("Bar graph summary");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.add( panel );
         frame.setLocationByPlatform( true );
@@ -182,23 +155,7 @@ public class BarGraph extends JPanel
         frame.setVisible( true );
     }
 
-    public static void main(String[] args)
-    {
-        EventQueue.invokeLater(new Runnable()
-        {
-            public void run()
-            {
-                BarGraph bg = new BarGraph();
-                Database db1 = new Database();
-                //bg.addHistogramColumn("B", 222, Color.BLUE);
-                //bg.addHistogramColumn("C", 222, Color.BLUE);
-                //bg.addHistogramColumn("D", 222, Color.BLUE);
-                db1.addExpense("2021-10-10", "A", 10, "comment1");
-                db1.addExpense("2021-10-10", "B", 20, "comment2");
-                db1.addExpense("2021-10-10", "B", 30, "comment3");
-                db1.addExpense("2021-10-10", "C", 40, "comment4");
-                bg.createAndShowGraph(db1);
-            }
-        });
+    public static void main(String[] args) {
+
     }
 }
