@@ -73,7 +73,7 @@ public class BarGraph extends JPanel {
         private double value;
         private Color color;
 
-        public Bar(String label, double value, Color color) {
+        public Bar(String label, double value, Color color) { //bar constructor
             this.label = label;
             this.value = value;
             this.color = color;
@@ -87,7 +87,7 @@ public class BarGraph extends JPanel {
             return value;
         }
 
-        public void addValue(double value) {
+        public void addValue(double value) { //add to object value, needed because multiple entries
             this.value += value;
         }
 
@@ -96,7 +96,7 @@ public class BarGraph extends JPanel {
         }
     }
 
-    private class ColorIcon implements Icon {
+    private class ColorIcon implements Icon { //bar colors
         private int shadow = 3;
 
         private Color color;
@@ -127,21 +127,21 @@ public class BarGraph extends JPanel {
 
     public void createAndShowGraph(Database database) { //build bargraph from database of expenses
         BarGraph panel = new BarGraph();
-        for (Expense e : database.db) {
+        for (Expense e : database.db) { //iterate through all expenses
             boolean existingCategory = false;
             Random rand = new Random();
             float r = rand.nextFloat();
             float g = rand.nextFloat();
             float b = rand.nextFloat();
             Color randomColor = new Color(r, g, b);
-            for (Bar bar : panel.bars) {
-                if (bar.getLabel().equals(e.getCategory())) {
+            for (Bar bar : panel.bars) { //iterate through all the bars to see if one already exists for that expense category
+                if (bar.getLabel().equals(e.getCategory())) { //if exists, add value to existing bar
                     bar.addValue(e.getPrice());
                     existingCategory = true;
                     break;
                 }
             }
-            if(!existingCategory) {
+            if(!existingCategory) { //if one doesnt exist, add new bar
                 panel.addBarGraphColumn(e.getCategory(), e.getPrice(), randomColor);
             }
         }
