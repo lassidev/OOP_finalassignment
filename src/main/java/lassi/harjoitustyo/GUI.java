@@ -56,9 +56,9 @@ public class GUI
                 public void actionPerformed(ActionEvent e) {
                     String filePath = fileChooser();
                     if (database.exportToCSV(table, filePath)){
-                        JOptionPane.showMessageDialog(null, "File saved to" + filePath);
+                        JOptionPane.showMessageDialog(frame, "File saved to" + filePath);
                     } else {
-                        JOptionPane.showMessageDialog(null, "Something went wrong, do you have permissions there?");
+                        JOptionPane.showMessageDialog(frame, "Something went wrong, do you have permissions there?");
                     }
                 }
             }
@@ -74,7 +74,7 @@ public class GUI
         filterExpensesByDate.addActionListener(
             new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    if (!filtered) {
+                    if (!filtered) { //save current table to database if you haven't applied a filter before
                         tableToDatabase();
                     }
                     String date = JOptionPane.showInputDialog(frame,"Enter date (empty to clear filter)");
@@ -83,6 +83,7 @@ public class GUI
                         filtered = true;
                     } else {
                         populateTable();
+                        filtered = false; //return to pre-filter state
                     }
                 }
             }
@@ -112,12 +113,12 @@ public class GUI
 
     public JMenu helpMenu() {
         JMenu helpMenu = new JMenu("Help");
-        JMenuItem getHelp = new JMenuItem("Get help");
+        JMenuItem getHelp = new JMenuItem("Get help"); //Mental health is important
         getHelp.addActionListener(
             new ActionListener() {
                     public void actionPerformed(ActionEvent ae) {
                         try {
-                            String url = "https://betterprogramming.pub/we-need-to-talk-about-mental-health-for-software-developers-65bfa00e2356"; // capture the URL when the user presses the button.
+                            String url = "https://betterprogramming.pub/we-need-to-talk-about-mental-health-for-software-developers-65bfa00e2356";
                             Desktop desktop = java.awt.Desktop.getDesktop();
                             URI oURL = new URI(url);
                             desktop.browse(oURL);
@@ -126,11 +127,12 @@ public class GUI
                         }
                     }
             });
-        JMenuItem debug = new JMenuItem("Debug");
+        JMenuItem debug = new JMenuItem("Debug"); 
         debug.addActionListener(
             new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        tableToDatabase();
+                        JOptionPane.showMessageDialog(frame, "Hello world!");
+                        //debug in production ;)
                     }
             });
         helpMenu.add(debug);
@@ -138,7 +140,7 @@ public class GUI
         return helpMenu;
     }
 
-    public JScrollPane table() {
+    public JScrollPane table() { //JTable to JScrollPane constructor
         tableModel = new DefaultTableModel();
         table = new JTable(tableModel);
         table.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -146,7 +148,7 @@ public class GUI
              public void mouseClicked(java.awt.event.MouseEvent evt) {
                 int col = table.columnAtPoint(evt.getPoint());
                 if (col == 0) {
-                    //JOptionPane.showMessageDialog(null, "My Goodness, this is so concise");
+                    //Placeholder if I get a datepicker somehow
                 }
              }
             });
@@ -159,7 +161,7 @@ public class GUI
 
     }
     
-    public void populateTable() {
+    public void populateTable() { //TODO rename to databaseToTable
         tableModel.setRowCount(0); //prevent duplicate adding
         for (Expense e : database.db) {
             tableModel.addRow(new Object[]{e.getDate(), e.getCategory(), e.getPrice(), e.getComment()});
