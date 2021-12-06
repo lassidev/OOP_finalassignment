@@ -11,7 +11,7 @@ public class Expense {
     private String comment;
 
     public Expense() {
-
+        //empty constructor
     }
 
     public Expense(String date, String category, double price, String comment) {
@@ -25,7 +25,7 @@ public class Expense {
         return this.date;
     }
 
-    public String getDateString () {
+    public String getDateString() {
         return this.date.toString();
     }
 

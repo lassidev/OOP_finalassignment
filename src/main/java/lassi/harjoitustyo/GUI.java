@@ -25,6 +25,7 @@ public class GUI
      private JTextField price;
      private JTextField comment;
      private Database database = new Database();
+     private boolean filtered = false;
 
     public JMenuBar menuBar() {
         menuBar = new JMenuBar();
@@ -54,7 +55,11 @@ public class GUI
             {
                 public void actionPerformed(ActionEvent e) {
                     String filePath = fileChooser();
-                    database.exportToCSV(table, filePath);
+                    if (database.exportToCSV(table, filePath)){
+                        JOptionPane.showMessageDialog(null, "File saved to" + filePath);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Something went wrong, do you have permissions there?");
+                    }
                 }
             }
         );
@@ -69,10 +74,15 @@ public class GUI
         filterExpensesByDate.addActionListener(
             new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    tableToDatabase();
-                    String date = JOptionPane.showInputDialog(frame,"Enter date");
-                    if (date != null) {
+                    if (!filtered) {
+                        tableToDatabase();
+                    }
+                    String date = JOptionPane.showInputDialog(frame,"Enter date (empty to clear filter)");
+                    if (!date.isEmpty()) {
                         filterTableByDate(date);
+                        filtered = true;
+                    } else {
+                        populateTable();
                     }
                 }
             }
@@ -131,6 +141,15 @@ public class GUI
     public JScrollPane table() {
         tableModel = new DefaultTableModel();
         table = new JTable(tableModel);
+        table.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+             public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int col = table.columnAtPoint(evt.getPoint());
+                if (col == 0) {
+                    //JOptionPane.showMessageDialog(null, "My Goodness, this is so concise");
+                }
+             }
+            });
         tableModel.addColumn("Date");
         tableModel.addColumn("Category");
         tableModel.addColumn("Price");
@@ -249,7 +268,7 @@ public class GUI
         
     }
 
-     public GUI() { //Constructor, graphical interface
+    public GUI() { //Constructor, graphical interface
 
          // building the GUI
          frame = new JFrame("Expense Manager"); //New JFrame
@@ -265,9 +284,9 @@ public class GUI
 
         }
         
-        public static void main(String s[]) {
+    public static void main(String s[]) {
      
             //GUI gui = new GUI();
 
-        }
+    }
 }

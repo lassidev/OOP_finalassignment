@@ -39,15 +39,11 @@ public class Database {
 
             
             br.readLine(); //read first line to skip columns
-            String line = br.readLine(); //second line
-
-            // loop until all lines are read
-            while (line != null) {
-                String[] attributes = line.split(",");
-                addExpense(attributes);
-                // read next line before looping
-                // if end of file reached, line would be null
-                line = br.readLine();
+            String line = br.readLine(); //second line  
+            while (line != null) { // loop until all lines are read
+                String[] attributes = line.split(","); //values to array, separated by comma
+                addExpense(attributes); //create new expense from array values
+                line = br.readLine(); // read next line before looping, if end of file reached, line would be null
             }
 
         } catch (IOException ioe) {
@@ -84,10 +80,10 @@ public class Database {
 
         csv.close();
         return true;
-    } catch (IOException e) {
+        } catch (IOException e) {
         e.printStackTrace();
-    }
-    return false;
+        }
+        return false;
     }
 
     public static void main(String[] args) {
